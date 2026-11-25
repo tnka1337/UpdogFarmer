@@ -24,7 +24,6 @@ configurations.configureEach {
 
 kotlin {
     compilerOptions {
-        freeCompilerArgs.add("-Xexplicit-backing-fields")
         jvmTarget.set(JvmTarget.JVM_17)
     }
 }
@@ -43,7 +42,7 @@ android {
         minSdk = 26 // Android 8
         targetSdk = 36 // Android 16
 
-        versionCode = 114
+        versionCode = 116
         versionName = "3.0.3"
 
         // val apiKey = providers.gradleProperty("steamApiKey").get()

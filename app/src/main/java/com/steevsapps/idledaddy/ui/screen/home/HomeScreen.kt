@@ -7,10 +7,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.MoreTime
-import androidx.compose.material.icons.filled.Redeem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -29,6 +28,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.steevsapps.idledaddy.BuildConfig
 import com.steevsapps.idledaddy.R
 import com.steevsapps.idledaddy.preferences.PrefsManager.minimizeData
+import com.steevsapps.idledaddy.steam.LoginPhase
 import com.steevsapps.idledaddy.steam.model.Game
 import com.steevsapps.idledaddy.ui.component.IdleTopAppBar
 import com.steevsapps.idledaddy.ui.component.NavIcon
@@ -69,7 +69,6 @@ fun HomeScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenContent(
     state: HomeUiState,
@@ -109,7 +108,7 @@ fun HomeScreenContent(
                         }
                         IconButton(onClick = { redeemAppDialogVisible = true }) {
                             Icon(
-                                imageVector = Icons.Default.Redeem,
+                                imageVector = Icons.Default.AddCircle,
                                 contentDescription = stringResource(R.string.redeem),
                             )
                         }
@@ -136,6 +135,10 @@ fun HomeScreenContent(
                 StatusCard(
                     isLoggedIn = state.loggedIn,
                     isBlocked = state.blocked,
+                    loginPhase = state.loginPhase,
+                    loginUsername = state.loginUsername,
+                    loginError = state.loginError,
+                    webLoginFailed = state.webLoginFailed,
                     nextRetryAtMillis = state.nextRetryAtMillis,
                     onClick = onStatusClick,
                 )
@@ -213,6 +216,10 @@ fun HomeScreenContent(
 private class HomePreview : PreviewParameterProvider<HomeUiState> {
     private val states = listOf(
         "Logged out" to HomeUiState(),
+        "Logging in" to HomeUiState(
+            loginPhase = LoginPhase.Connecting,
+            loginUsername = "gaben",
+        ),
         "Idling" to HomeUiState(
             loggedIn = true,
             currentGames = listOf(Game(440, "Team Fortress 2", 987654F, 42)),
